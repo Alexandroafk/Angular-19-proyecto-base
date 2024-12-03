@@ -1,5 +1,5 @@
 {
-  "name": "test-1",
+  "name": "angular-base",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:test-1": "node dist/test-1/server/server.mjs"
+    "serve:ssr:angular-base": "node dist/angular-base/server/server.mjs"
   },
   "private": true,
   "dependencies": {
