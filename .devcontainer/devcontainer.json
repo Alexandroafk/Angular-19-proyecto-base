@@ -1,0 +1,33 @@
+{
+    "name": "Angular Project",
+    "dockerComposeFile": "compose.yml",
+    "service": "angular",
+    "workspaceFolder": "/angular",
+    "customizations": {
+        "settings": {
+            "terminal.integrated.shell.linux": "/bin/bash",
+            "editor.tabSize": 2
+        },
+        "vscode": {
+            "extensions": [
+                "vivaxy.vscode-conventional-commits",
+                "ms-vsliveshare.vsliveshare",
+                "Serhioromano.vscode-gitflow",
+                "eamodio.gitlens",
+                "GitHub.vscode-pull-request-github",
+                "MS-CEINTL.vscode-language-pack-es",
+                "esbenp.prettier-vscode"
+            ]
+        }
+    },
+    "postCreateCommand": "npm install && ng analytics off",
+    "postAttachCommand": "ng serve --host 0.0.0.0",
+    "forwardPorts": [
+        4200
+    ],
+    "portsAttributes": {
+        "4200": {
+            "label": "Angular server"
+        }
+    }
+}

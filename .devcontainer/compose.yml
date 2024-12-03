@@ -1,0 +1,72 @@
+services:
+  angular:
+    image: andres0100/angular-afk:19
+    env_file:
+      - .env
+    environment:
+      DATABASE_HOST: ${POSTGRES_HOST}
+      DATABASE_PORT: ${POSTGRES_PORT}
+      DATABASE_USER: ${POSTGRES_USER}
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ${ANGULAR_FOLDER}:/angular
+    ports:
+      - ${ANGULAR_EXTERNAL_PORT}:4200
+    working_dir: /angular
+    tty: true
+    stdin_open: true
+
+  angular_postgres:
+    image: postgres:17-alpine
+    user: postgres
+    env_file:
+      - .env
+    volumes:
+      - angular_postgres_data:/var/lib/postgresql/data
+      # - ./sql/${DB_SQL_FILE}.sql:/tmp/${DB_SQL_FILE}.sql:ro
+      - ./scripts/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh:ro
+    # ports:
+      # - ${POSTGRES_PORT}:5432
+    command: postgres -c 'max_connections=1000'
+
+  angular_pgadmin:
+    image: dpage/pgadmin4
+    depends_on:
+      - ${POSTGRES_HOST}
+    ports:
+      - ${PGADMIN_EXTERNAL_PORT}:80
+    environment:
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+      PGADMIN_SERVER_JSON_FILE: /tmp/servers.json
+    volumes:
+      - angular_pgadmin_data:/var/lib/pgadmin
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        echo "Agregando ${POSTGRES_HOST} a PgAdmin"
+        cat > /tmp/servers.json <<EOF
+        {
+            "Servers": {
+                "1": {
+                    "Name": "${PGADMIN_SERVER_NAME}",
+                    "Group": "${PGADMIN_GROUP_NAME}",
+                    "Port": ${POSTGRES_PORT},
+                    "Username": "${POSTGRES_USER}",
+                    "Host": "${POSTGRES_HOST}",
+                    "SSLMode": "prefer",
+                    "MaintenanceDB": "${POSTGRES_DB}"
+                }
+            }
+        }
+        EOF
+        exec /entrypoint.sh
+
+volumes:
+  angular_postgres_data:
+  angular_pgadmin_data:
