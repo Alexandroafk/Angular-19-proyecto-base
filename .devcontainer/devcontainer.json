@@ -20,7 +20,7 @@
             ]
         }
     },
-    "postCreateCommand": "npm install && ng analytics off",
+    "postCreateCommand": "rm node_modules && ng analytics off && npm install",
     "postAttachCommand": "ng serve --host 0.0.0.0",
     "forwardPorts": [
         4200
