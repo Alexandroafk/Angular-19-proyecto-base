@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-psql -U $POSTGRES_USER -d $POSTGRES_DB -c "CREATE ROLE codedta;"
+# psql -U $POSTGRES_USER -d $POSTGRES_DB -c "CREATE ROLE codedta;"
 
 # Verificar que la base de datos no tenga tablas
 if ! psql -U $POSTGRES_USER -d $POSTGRES_DB -t -c "SELECT 1 FROM pg_catalog.pg_tables WHERE schemaname = 'public'" | grep -q 1; then
